@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/MPoline/graduation_project_1/internal/models"
+	"github.com/MPoline/Gophermart/internal/models"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )

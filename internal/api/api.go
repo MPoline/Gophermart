@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/MPoline/graduation_project_1/internal/middleware"
-	"github.com/MPoline/graduation_project_1/internal/services"
+	"github.com/MPoline/Gophermart/internal/middleware"
+	"github.com/MPoline/Gophermart/internal/services"
 	"github.com/gin-gonic/gin"
 )
 

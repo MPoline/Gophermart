@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/MPoline/graduation_project_1/internal/api"
-	"github.com/MPoline/graduation_project_1/internal/database"
-	"github.com/MPoline/graduation_project_1/internal/flags"
-	"github.com/MPoline/graduation_project_1/internal/logging"
+	"github.com/MPoline/Gophermart/internal/api"
+	"github.com/MPoline/Gophermart/internal/database"
+	"github.com/MPoline/Gophermart/internal/flags"
+	"github.com/MPoline/Gophermart/internal/logging"
 	"go.uber.org/zap"
 )
 

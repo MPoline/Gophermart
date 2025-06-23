@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/MPoline/graduation_project_1/internal/flags"
+	"github.com/MPoline/Gophermart/internal/flags"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"go.uber.org/zap"

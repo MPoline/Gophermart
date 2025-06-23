@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/MPoline/graduation_project_1/internal/database"
-	"github.com/MPoline/graduation_project_1/internal/models"
+	"github.com/MPoline/Gophermart/internal/database"
+	"github.com/MPoline/Gophermart/internal/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )

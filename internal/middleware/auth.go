@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-		"github.com/MPoline/graduation_project_1/internal/models"
+	"github.com/MPoline/Gophermart/internal/models"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
