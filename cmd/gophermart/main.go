@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/MPoline/Gophermart/internal/api"
-	"github.com/MPoline/Gophermart/internal/database"
 	"github.com/MPoline/Gophermart/internal/flags"
 	"github.com/MPoline/Gophermart/internal/logging"
+	"github.com/MPoline/Gophermart/internal/services"
 	"go.uber.org/zap"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	undo := zap.ReplaceGlobals(logger)
 	defer undo()
 
-	err = database.DBInit()
+	err = services.DBInit()
 	if err != nil {
 		logger.Warn("Error start database: ", zap.Error(err))
 	}

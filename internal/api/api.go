@@ -1,8 +1,8 @@
 package api
 
 import (
+	"github.com/MPoline/Gophermart/internal/handlers"
 	"github.com/MPoline/Gophermart/internal/middleware"
-	"github.com/MPoline/Gophermart/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,18 +12,19 @@ func InitRouter() *gin.Engine {
 
 	public := router.Group("/api")
 	{
-		public.POST("/user/register", services.RegisterUser)
-		public.POST("/user/login", services.LoginUser)
+		public.POST("/user/register", handlers.RegisterUser)
+		public.POST("/user/login", handlers.LoginUser)
 	}
 
 	private := router.Group("/api")
 	private.Use(middleware.AuthMiddleware())
 	{
-		private.POST("/user/orders", services.DownloadOrders)
-		// router.GET("/api/user/orders", services.GetOrders)
-		// router.GET("/api/user/balance", services.GetBalance)
-		// router.POST("/api/user/balance/withdraw", services.WithdrawBalance)
-		// router.GET("/api/user/withdrawals", services.GetWithdrawals)
+		private.POST("/user/orders", handlers.DownloadOrders)
+		private.GET("/user/orders", handlers.GetOrders)
+		private.GET("/user/balance", handlers.GetBalance)
+		private.POST("/user/balance/withdraw", handlers.WithdrawBalance)
+		private.GET("/user/withdrawals", handlers.GetWithdrawals)
+		private.GET("/orders/:number", handlers.GetOrderAccrual)
 	}
 
 	return router

@@ -8,13 +8,15 @@ import (
 )
 
 var (
-	FlagRunAddr     string
-	FlagDatabaseURI string
+	FlagRunAddr              string
+	FlagDatabaseURI          string
+	FlagAccuralSystemAddress string
 )
 
 func ParseFlags() {
 	flag.StringVar(&FlagRunAddr, "a", ":8080", "address and port to run server")
 	flag.StringVar(&FlagDatabaseURI, "d", ":9876", "address and port to run database")
+	flag.StringVar(&FlagAccuralSystemAddress, "r", ":9000", "address and port to run accural")
 
 	flag.Parse()
 
@@ -34,9 +36,15 @@ func ParseFlags() {
 		FlagDatabaseURI = envDatabaseURI
 	}
 
+	if envAccuralSystemAddress := os.Getenv("ACCRUAL_SYSTEM_ADDRESS"); envAccuralSystemAddress != "" {
+		zap.L().Info("ACCRUAL_SYSTEM_ADDRESS: ", zap.String("envAccuralSystemAddress", envAccuralSystemAddress))
+		FlagAccuralSystemAddress = envAccuralSystemAddress
+	}
+
 	zap.L().Info(
 		"Server settings",
 		zap.String("Running server address: ", FlagRunAddr),
 		zap.String("Running database address: ", FlagDatabaseURI),
+		zap.String("Running accural address: ", FlagAccuralSystemAddress),
 	)
 }

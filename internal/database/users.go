@@ -17,7 +17,7 @@ func (db *Database) CreateUsersTable(ctx context.Context) error {
 		hashedPassword BYTEA NOT NULL
 	); `
 
-	_, err := db.dbConn.ExecContext(ctx, createQuery)
+	_, err := db.DBConn.ExecContext(ctx, createQuery)
 	if err != nil {
 		handlePGError(err)
 		return err
@@ -28,7 +28,7 @@ func (db *Database) CreateUsersTable(ctx context.Context) error {
 
 func (db *Database) CheckLogin(ctx context.Context, login string) (bool, error) {
 	var found bool
-	err := db.dbConn.QueryRow(`SELECT EXISTS(SELECT 1 FROM users WHERE login = $1)`, login).Scan(&found)
+	err := db.DBConn.QueryRow(`SELECT EXISTS(SELECT 1 FROM users WHERE login = $1)`, login).Scan(&found)
 	if err != nil {
 		handlePGError(err)
 		return false, err
@@ -41,7 +41,7 @@ func (db *Database) CheckLogin(ctx context.Context, login string) (bool, error) 
 
 func (db *Database) AddUser(ctx context.Context, login string, hashedPassword string) error {
 	insertQuery := `INSERT INTO users (login, hashedPassword) VALUES ($1, $2)`
-	_, err := db.dbConn.ExecContext(ctx, insertQuery, login, hashedPassword)
+	_, err := db.DBConn.ExecContext(ctx, insertQuery, login, hashedPassword)
 	if err != nil {
 		handlePGError(err)
 		return err
@@ -53,7 +53,7 @@ func (db *Database) AddUser(ctx context.Context, login string, hashedPassword st
 
 func (db *Database) FindUser(ctx context.Context, login string) (models.User, error) {
 	var user models.User
-	row := db.dbConn.QueryRowContext(ctx, ` SELECT id, login, hashedPassword FROM users WHERE login = $1 LIMIT 1 `, login)
+	row := db.DBConn.QueryRowContext(ctx, ` SELECT id, login, hashedPassword FROM users WHERE login = $1 LIMIT 1 `, login)
 	err := row.Scan(&user.ID, &user.Login, &user.HashedPassword)
 	if err != nil {
 		if err == sql.ErrNoRows {

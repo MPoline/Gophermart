@@ -1,11 +1,11 @@
-package services
+package handlers
 
 import (
 	"net/http"
 	"strings"
 
-	"github.com/MPoline/Gophermart/internal/database"
-	"github.com/MPoline/Gophermart/internal/models"
+	"github.com/MPoline/Gophermart/internal/services"
+	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
 )
@@ -46,24 +46,19 @@ func luhnCheck(number string) bool {
 func DownloadOrders(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	token, err := c.Cookie("auth_token")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"message": "Пользователь не аутентифицирован",
-		})
-		return
-	}
+	login := c.GetString("userLogin")
 
-	login, err := models.ValidateAuthToken(token)
-	if err != nil {
+	if login == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"message": "Недействительный токен авторизации",
+			"mesage": "Требуется авторизация",
 		})
 		return
 	}
 
 	orderNumber, err := c.GetRawData()
 	if err != nil {
+		zap.L().Info("Неверный формат запроса",
+			zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Неверный формат запроса",
 		})
@@ -73,6 +68,8 @@ func DownloadOrders(c *gin.Context) {
 	orderStr := strings.TrimSpace(string(orderNumber))
 
 	if !isValidNumber(orderStr) {
+		zap.L().Info("Номер заказа должен содержать только цифры",
+			zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Номер заказа должен содержать только цифры",
 		})
@@ -80,17 +77,21 @@ func DownloadOrders(c *gin.Context) {
 	}
 
 	if !luhnCheck(orderStr) {
+		zap.L().Info("Неверный формат номера заказа",
+			zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Неверный формат номера заказа",
 		})
 		return
 	}
 
-	db := database.New()
-	defer db.Close()
+	db := services.New()
+	defer services.Close(db)
 
 	order, err := db.SelectOrder(ctx, orderStr)
 	if err != nil && err.Error() != "OrderNotFound" {
+		zap.L().Info("Ошибка при получении заказов",
+			zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})
